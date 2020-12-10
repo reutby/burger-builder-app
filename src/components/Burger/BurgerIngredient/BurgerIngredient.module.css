@@ -97,6 +97,13 @@
     border-radius: 20px;
 }
 
+.Onion {
+  width: 90%;
+  height: 6%;
+  margin: 2% auto;
+  background: linear-gradient(#f3f2da, #999b84);
+  border-radius: 20px;
+}
 .Salad {
     width: 85%;
     height: 7%;

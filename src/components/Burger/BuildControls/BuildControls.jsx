@@ -6,9 +6,12 @@ const controlsList = [
     { label: "Meat", type: "meat" },
     { label: "Cheese", type: "cheese" },
     { label: "Salad", type: "salad" },
-    { label: "Bacon", type: "bacon" }
+    { label: "Bacon", type: "bacon" },
+    { label: "Onion", type: "onion" }
 ];
-const BuildControls = (props) => (
+const BuildControls = (props) => {
+    
+    return(
     <div className={classes.BuildControls}>
         <h3 >Current Price: {props.totalPrice} $</h3>
 
@@ -24,7 +27,7 @@ const BuildControls = (props) => (
             disabled={!props.purchasable}
             onClick={props.onOrderClicked}
         >ORDER NOW</button>
-    </div>
-);
+    </div>)
+};
 
 export default BuildControls;

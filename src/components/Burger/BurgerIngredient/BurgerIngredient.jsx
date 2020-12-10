@@ -26,6 +26,9 @@ const BurgerIngredient = (props) => {
         case 'bacon':
             ingredient = <div className={classes.Bacon}></div>
             break;
+        case 'onion':
+            ingredient = <div className={classes.Onion}></div>
+            break;
         default:
             console.log(props.type, " is not a valid type");
 
