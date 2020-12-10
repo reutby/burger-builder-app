@@ -22,8 +22,17 @@ class BurgerBuilder extends Component {
             meat: 0
         },
         totalPrice: 4,
-        purchasable: false
+        purchasable: false,
+        purchaseMode: false
     }
+
+    PurchasableOnModeHandler = () => {
+        this.setState({ purchaseMode: true });
+    };
+
+    PurchasableOffModeHandler = () => {
+        this.setState({ purchaseMode: false });
+    };
 
     updatePurchaseState = (ingredient) => {
         const sum = Object.keys(ingredient)
@@ -33,7 +42,7 @@ class BurgerBuilder extends Component {
             .reduce((sum, el) => {
                 return sum + el;
             }, 0);
-            this.setState({purchasable:sum>0});
+        this.setState({ purchasable: sum > 0 });
     }
     removeIngredientHandler = (type) => {
         const copyIg = { ...this.state.ingredients };
@@ -59,16 +68,19 @@ class BurgerBuilder extends Component {
     render() {
         return (
             <Aux>
-                <Modal>
-                    <OrderSummary ingredients={this.state.ingredients}/>
+                <Modal
+                    show={this.state.purchaseMode}
+                    onBackDropCliced={this.PurchasableOffModeHandler}>
+                    <OrderSummary ingredients={this.state.ingredients} />
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <p className={classes.TotalPrice}>Total Price: {this.state.totalPrice} $</p>
-                <BuildControls 
-                removeIng={this.removeIngredientHandler} 
-                purchasable={this.state.purchasable}
-                ingredients={this.state.ingredients}
-                addIng={this.addIngredeientHandler} />
+                <BuildControls
+                    removeIng={this.removeIngredientHandler}
+                    purchasable={this.state.purchasable}
+                    ingredients={this.state.ingredients}
+                    addIng={this.addIngredeientHandler}
+                    onOrderClicked={this.PurchasableOnModeHandler} />
             </Aux>
 
         );
