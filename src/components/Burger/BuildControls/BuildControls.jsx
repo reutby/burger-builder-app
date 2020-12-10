@@ -10,7 +10,8 @@ const controlsList = [
 ];
 const BuildControls = (props) => (
     <div className={classes.BuildControls}>
-        {controlsList.map((control) => (<BuildControl rmvIng={props.removeIng} addIng={props.addIng} key={control.label} label={control.label} type={control.type}/>))}
+        {controlsList.map((control) => (<BuildControl rmvIng={()=>props.removeIng(control.type)} addIng={()=>props.addIng(control.type)} key={control.label} label={control.label} type={control.type}/>))}
+    <button className={classes.OrderButton}>ORDER NOW</button>
     </div>
 );
 
