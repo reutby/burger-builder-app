@@ -3,8 +3,8 @@ import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import classes from "./BurgerBuilder.module.css";
-
-
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 const INGREDIENT_PRICES = {
     salad: 0.5,
     cheese: 0.4,
@@ -21,7 +21,19 @@ class BurgerBuilder extends Component {
             cheese: 0,
             meat: 0
         },
-        totalPrice: 4
+        totalPrice: 4,
+        purchasable: false
+    }
+
+    updatePurchaseState = (ingredient) => {
+        const sum = Object.keys(ingredient)
+            .map(keyIg => {
+                return ingredient[keyIg];
+            })
+            .reduce((sum, el) => {
+                return sum + el;
+            }, 0);
+            this.setState({purchasable:sum>0});
     }
     removeIngredientHandler = (type) => {
         const copyIg = { ...this.state.ingredients };
@@ -31,6 +43,7 @@ class BurgerBuilder extends Component {
             copyIg[type]--;
             this.setState({ ingredients: copyIg, totalPrice: Math.floor(totalPrice) });
         }
+        this.updatePurchaseState(copyIg);
     };
 
     addIngredeientHandler = (type) => {
@@ -39,14 +52,23 @@ class BurgerBuilder extends Component {
         totalPrice += INGREDIENT_PRICES[type];
         copyIg[type]++;
         this.setState({ ingredients: copyIg, totalPrice: Math.floor(totalPrice) });
+        this.updatePurchaseState(copyIg);
+
     };
 
     render() {
         return (
             <Aux>
+                <Modal>
+                    <OrderSummary ingredients={this.state.ingredients}/>
+                </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <p className={classes.TotalPrice}>Total Price: {this.state.totalPrice} $</p>
-                <BuildControls removeIng={this.removeIngredientHandler} addIng={this.addIngredeientHandler} />
+                <BuildControls 
+                removeIng={this.removeIngredientHandler} 
+                purchasable={this.state.purchasable}
+                ingredients={this.state.ingredients}
+                addIng={this.addIngredeientHandler} />
             </Aux>
 
         );
