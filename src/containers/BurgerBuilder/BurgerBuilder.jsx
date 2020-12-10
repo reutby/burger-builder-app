@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import classes from "./BurgerBuilder.module.css";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 const INGREDIENT_PRICES = {
@@ -30,9 +29,12 @@ class BurgerBuilder extends Component {
         this.setState({ purchaseMode: true });
     };
 
-    PurchasableOffModeHandler = () => {
+    purchasableOffModeHandler = () => {
         this.setState({ purchaseMode: false });
     };
+    purchaseContinueHandler = () => {
+        alert("you continue!");
+    }
 
     updatePurchaseState = (ingredient) => {
         const sum = Object.keys(ingredient)
@@ -55,7 +57,7 @@ class BurgerBuilder extends Component {
         this.updatePurchaseState(copyIg);
     };
 
-    addIngredeientHandler = (type) => {
+    addIngredientHandler = (type) => {
         const copyIg = { ...this.state.ingredients };
         let { totalPrice } = this.state;
         totalPrice += INGREDIENT_PRICES[type];
@@ -69,17 +71,21 @@ class BurgerBuilder extends Component {
         return (
             <Aux>
                 <Modal
-                    show={this.state.purchaseMode}
-                    onBackDropCliced={this.PurchasableOffModeHandler}>
-                    <OrderSummary ingredients={this.state.ingredients} />
+                    show={this.state.purchaseMode}>
+                    <OrderSummary ingredients={this.state.ingredients}
+                        purchaseCancel={this.purchasableOffModeHandler}
+                        purchaseContinue={this.purchaseContinueHandler}
+                        totalPrice={this.state.totalPrice}
+
+                    />
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
-                <p className={classes.TotalPrice}>Total Price: {this.state.totalPrice} $</p>
                 <BuildControls
+                    totalPrice={this.state.totalPrice}
                     removeIng={this.removeIngredientHandler}
                     purchasable={this.state.purchasable}
                     ingredients={this.state.ingredients}
-                    addIng={this.addIngredeientHandler}
+                    addIng={this.addIngredientHandler}
                     onOrderClicked={this.PurchasableOnModeHandler} />
             </Aux>
 
