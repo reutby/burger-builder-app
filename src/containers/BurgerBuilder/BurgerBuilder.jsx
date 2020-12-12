@@ -1,9 +1,14 @@
 import React, { Component } from "react";
+
 import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import orderAxios from "../../axios-orders";
+import Spinner from "../../components/UI/Spinner/Spinner";
+import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
+
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -25,7 +30,8 @@ class BurgerBuilder extends Component {
         },
         totalPrice: 4,
         purchasable: false,
-        purchaseMode: false
+        purchaseMode: false,
+        loading:false
     }
 
     PurchasableOnModeHandler = () => {
@@ -35,9 +41,34 @@ class BurgerBuilder extends Component {
     purchasableOffModeHandler = () => {
         this.setState({ purchaseMode: false });
     };
+
     purchaseContinueHandler = () => {
-        alert("you continue!");
+        this.setState({loading:true});
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice,
+            customer: {
+                name: "reut",
+                address: {
+                    street: "evenu street",
+                    zipCode: "12543",
+                    country: "Israel"
+                },
+                email: "blabla@hello.com"
+            },
+            deliveryMethod: "fastest"
+        };
+        orderAxios.post("/orders.json", order)
+            .then(response => {
+                this.setState({loading:false, purchaseMode:false});
+            })
+            .catch(err => {
+                this.setState({loading:false, purchaseMode:false});
+            });
+
     };
+
+
 
     setBackToStatingPrice = () => {
         this.setState({ totalPrice: 4 });
@@ -60,7 +91,7 @@ class BurgerBuilder extends Component {
         if (copyIg[type] && totalPrice > 0) {
             copyIg[type]--;
             this.setState({ ingredients: copyIg, totalPrice: Math.round(totalPrice * 100) / 100 });
-            
+
         }
         this.updatePurchaseState(copyIg);
     };
@@ -79,17 +110,18 @@ class BurgerBuilder extends Component {
         return (
             <Aux>
                 <Modal
-                    show={this.state.purchaseMode}>
-                    <OrderSummary ingredients={this.state.ingredients}
+                    show={this.state.purchaseMode}
+                    closedModal ={this.purchasableOffModeHandler}>
+                    {this.state.loading? <Spinner /> : <OrderSummary ingredients={this.state.ingredients}
                         purchaseCancel={this.purchasableOffModeHandler}
                         purchaseContinue={this.purchaseContinueHandler}
                         totalPrice={this.state.totalPrice}
 
-                    />
+                    />}
                 </Modal>
                 <Burger
                     ingredients={this.state.ingredients}
-                     />
+                />
                 <BuildControls
                     setDefaultPrice={this.setBackToStatingPrice}
                     totalPrice={this.state.totalPrice}
@@ -104,4 +136,4 @@ class BurgerBuilder extends Component {
     }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder,orderAxios);
