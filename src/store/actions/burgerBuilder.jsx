@@ -38,6 +38,7 @@ export const setInitIngredients =()=>{
     return dispatch=>{
         orderAxios.get("/ingredient.json")
             .then(res => {
+                console.log(res);
                 dispatch(setIngredients(res.data));
             })
             .catch(err => {
