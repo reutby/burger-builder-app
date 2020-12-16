@@ -2,6 +2,7 @@ import React from "react";
 import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
 import classes from "./Burger.module.css"
 const Burger = (props) => {
+    console.log(props.ingredients); 
     let transformIngredients = Object.keys(props.ingredients)
         .map(igkey => {
             const countIngredients = [...Array(props.ingredients[igkey])]

@@ -9,7 +9,7 @@ const Input = (props) => {
     
     if(props.invalid && props.isTouch){
         inputClasses.push(classes.Invalid);
-        ValidationError = <p>Please Enter a valid value!</p>;
+        ValidationError = <p style={{color:"red"}}>*Please Enter a valid value!</p>;
     }
 
     switch (props.elementType) {
