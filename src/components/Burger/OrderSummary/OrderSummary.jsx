@@ -2,11 +2,7 @@ import React, { Component } from "react";
 import Aux from "../../../hoc/Aux/Aux";
 import Button from "../../UI/Button/Button";
 
-class OrderSummary extends Component {
-    
-    componentDidUpdate() {
-        console.log("[orderSummary] component should update");
-    }
+class OrderSummary extends Component {  
 
     render() {
         const ingredients = Object.keys(this.props.ingredients)

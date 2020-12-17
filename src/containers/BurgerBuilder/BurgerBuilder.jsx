@@ -22,7 +22,11 @@ class BurgerBuilder extends Component {
     }
 
     PurchasableOnModeHandler = () => {
-        this.setState({ purchaseMode: true });
+        if(this.props.isAuth){
+            this.setState({ purchaseMode: true });
+        }else{
+            this.props.history.push('/auth');
+        }
     };
 
     purchasableOffModeHandler = () => {
@@ -65,6 +69,7 @@ class BurgerBuilder extends Component {
                     purchasable={this.updatePurchaseState(this.props.ings)}
                     ingredients={this.props.ings}
                     addIng={this.props.addIngredient}
+                    isAuth={this.props.isAuth}
                     onOrderClicked={this.PurchasableOnModeHandler} />
             </Aux>)
 
@@ -95,7 +100,9 @@ const mapStatesToProps = ((state) => {
     return {
         ings: state.bbr.ingredients,
         price: state.bbr.totalPrice,
-        err: state.bbr.error
+        err: state.bbr.error,
+        isAuth:state.auth.tokenId!==null,
+        onBuildingBurger:state.bbr.building
     };
 });
 

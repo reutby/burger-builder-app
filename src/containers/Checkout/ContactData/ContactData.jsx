@@ -20,21 +20,22 @@ class ContactData extends Component {
         if (!rules) {
             return true;
         }
-        let isvalid = true;
+        let isValid = true;
 
         if (rules.require) {
-            isvalid = (value.trim() !== '' && isvalid);
+            isValid = (value.trim() !== '' && isValid);
         }
-        if (rules.emailStructure) {
-            isvalid = value.includes('@') && value.includes('.') && isvalid;
+        if (rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value) && isValid
         }
         if (rules.minLength) {
-            isvalid = (value.length >= rules.minLength && isvalid);
+            isValid = (value.length >= rules.minLength && isValid);
         }
         if (rules.maxLength) {
-            isvalid = value.length <= rules.maxLength && isvalid;
+            isValid = value.length <= rules.maxLength && isValid;
         }
-        return isvalid;
+        return isValid;
     }
     orderHandler = (event) => {
         event.preventDefault();
@@ -51,7 +52,7 @@ class ContactData extends Component {
             deliveryMethod: deliveryMethodValue
         };
         console.log(order);
-        this.props.purchaseBurger(order,this.props.history);
+        this.props.purchaseBurger(order,this.props.history,this.props.token);
         
     }
     onChangeInputHandler = (event) => {
@@ -143,13 +144,14 @@ const mapStatesToProps = ((state) => {
     return {
         ings: state.bbr.ingredients,
         price: state.bbr.totalPrice,
-        loading:state.order.loading
+        loading:state.order.loading,
+        token:state.auth.tokenId
     };
 });
 
 const mapDispatchToProps = ((dispatch) => {
     return {
-        purchaseBurger: (order,history)=> dispatch(ActionsCreators.purchasableBurger(order,history))
+        purchaseBurger: (order,history,token)=> dispatch(ActionsCreators.purchasableBurger(order,history,token))
     };
 });
 

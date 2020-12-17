@@ -11,7 +11,8 @@ const INGREDIENT_PRICES = {
 const initialState = {
     ingredients: null,
     totalPrice: 4,
-    error: false
+    error: false,
+    building:false
 }
 
 const addIngredient = (state, action) => {
@@ -19,7 +20,8 @@ const addIngredient = (state, action) => {
     const updateIngredients = updateObject(state.ingredients, updateIngredient);
     const updateState = {
         ingredients: updateIngredients,
-        totalPrice: Math.round((state.totalPrice + INGREDIENT_PRICES[action.ingType]) * 100) / 100
+        totalPrice: Math.round((state.totalPrice + INGREDIENT_PRICES[action.ingType]) * 100) / 100,
+        building:true
     }
     return updateObject(state, updateState);
 
@@ -30,7 +32,8 @@ const removeIngredient = (state, action) => {
     const updateIngredients = updateObject(state.ingredients, updateIngredient);
     const updateState = {
         ingredients: updateIngredients,
-        totalPrice: Math.round((state.totalPrice - INGREDIENT_PRICES[action.ingType]) * 100) / 100
+        totalPrice: Math.round((state.totalPrice - INGREDIENT_PRICES[action.ingType]) * 100) / 100,
+        building:true
     }
     return updateObject(state, updateState);
 
@@ -46,7 +49,8 @@ const setInitIngredients = (state, action) => {
             bacon: action.ingredients.bacon,
             cheese: action.ingredients.cheese,
             meat: action.ingredients.meat
-        }
+        },
+        building:false
 
     }
     console.log(updateState);

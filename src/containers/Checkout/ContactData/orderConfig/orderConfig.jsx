@@ -23,7 +23,7 @@ const orderConfig = {
         value:'',
         validation:{
             require:true,
-            emailStructure :true
+            isEmail :true
         },
         valid:false,
         touch:false

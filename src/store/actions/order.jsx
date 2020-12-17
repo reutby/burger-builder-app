@@ -25,10 +25,10 @@ export const purchasableBurgerStart = () => {
     }
 }
 
-export const purchasableBurger = (order, history) => {
+export const purchasableBurger = (order, history,token) => {
     return dispatch => {
         dispatch(purchasableBurgerStart());
-        orderAxios.post("/orders.json", order)
+        orderAxios.post("/orders.json+auth="+token, order)
             .then(response => {
                 dispatch(purchasableBurgerSuccess(response.data.name, order));
                 history.push("/orders");
@@ -62,10 +62,10 @@ export const fetchOrdersFail = (err) => {
 }
 
 
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        orderAxios.get("/orders.json")
+        orderAxios.get("/orders.json?auth="+token)
             .then(res => {
                 const resdata = res.data;
                 const updateOrders = [];
