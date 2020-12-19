@@ -28,15 +28,15 @@ export const purchasableBurgerStart = () => {
 export const purchasableBurger = (order, history,token) => {
     return dispatch => {
         dispatch(purchasableBurgerStart());
-        orderAxios.post("/orders.json+auth="+token, order)
+        orderAxios.post("/orders.json?auth="+token, order)
             .then(response => {
                 dispatch(purchasableBurgerSuccess(response.data.name, order));
                 history.push("/orders");
             })
             .catch(err => {
-
+                console.log(err);
                 dispatch(purchasableBurgerFail(err));
-                history.history("/orders");
+                history.push("/orders");
             });
     }
 }
@@ -62,14 +62,15 @@ export const fetchOrdersFail = (err) => {
 }
 
 
-export const fetchOrders = (token) => {
+export const fetchOrders = (token,userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        orderAxios.get("/orders.json?auth="+token)
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        
+        orderAxios.get("/orders.json"+queryParams)
             .then(res => {
                 const resdata = res.data;
                 const updateOrders = [];
-                console.log(resdata);
                 for (let key in resdata) {
                     updateOrders.push({
                         ...res.data[key],

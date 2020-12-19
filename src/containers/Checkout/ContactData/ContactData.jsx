@@ -49,7 +49,8 @@ class ContactData extends Component {
             ingredients: this.props.ings,
             price: this.props.price,
             customer: costumer,
-            deliveryMethod: deliveryMethodValue
+            deliveryMethod: deliveryMethodValue,
+            userId:this.props.userId
         };
         console.log(order);
         this.props.purchaseBurger(order,this.props.history,this.props.token);
@@ -145,7 +146,8 @@ const mapStatesToProps = ((state) => {
         ings: state.bbr.ingredients,
         price: state.bbr.totalPrice,
         loading:state.order.loading,
-        token:state.auth.tokenId
+        token:state.auth.tokenId,
+        userId:state.auth.userId
     };
 });
 
