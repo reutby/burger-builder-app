@@ -18,6 +18,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
     );
  
     useEffect(() => {
+      
       return () => {
         axios.interceptors.request.eject(reqInterceptor);
         axios.interceptors.response.eject(resInterceptor);

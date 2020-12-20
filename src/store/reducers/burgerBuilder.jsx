@@ -1,5 +1,5 @@
 import * as actionsTypes from "../actions/actionTypes"
-import { updateObject } from "../utility";
+import {updateObject} from "../../shared/utility";
 const INGREDIENT_PRICES = {
     salad: 0.5,
     cheese: 0.4,
@@ -53,7 +53,6 @@ const setInitIngredients = (state, action) => {
         building:false
 
     }
-    console.log(updateState);
     return updateObject(state, updateState);
 
 }

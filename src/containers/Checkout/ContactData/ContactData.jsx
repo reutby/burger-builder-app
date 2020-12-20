@@ -9,6 +9,7 @@ import Input from "../../../components/UI/Input/Input";
 import orderConfig from "./orderConfig/orderConfig";
 import * as ActionsCreators from "../../../store/actions/index";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+import {checkValidity} from "../../../shared/utility";
 class ContactData extends Component {
 
     state = {
@@ -16,27 +17,7 @@ class ContactData extends Component {
         formIsValid: false,
     }
 
-    checkValidity = (value, rules) => {
-        if (!rules) {
-            return true;
-        }
-        let isValid = true;
-
-        if (rules.require) {
-            isValid = (value.trim() !== '' && isValid);
-        }
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-        if (rules.minLength) {
-            isValid = (value.length >= rules.minLength && isValid);
-        }
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-        return isValid;
-    }
+    
     orderHandler = (event) => {
         event.preventDefault();
         const costumer = {};
@@ -52,7 +33,7 @@ class ContactData extends Component {
             deliveryMethod: deliveryMethodValue,
             userId:this.props.userId
         };
-        console.log(order);
+        
         this.props.purchaseBurger(order,this.props.history,this.props.token);
         
     }
@@ -61,14 +42,13 @@ class ContactData extends Component {
         const validationRules = {
             ...this.state.orderForm[name].validation
         }
-        const isValid = this.checkValidity(value, validationRules);
+        const isValid = checkValidity(value, validationRules);
 
         let isFormValid = true;
         for (let inputElement in this.state.orderForm) {
 
             isFormValid = this.state.orderForm[inputElement].valid && isFormValid;
         }
-        console.log(isFormValid);
         this.setState((prev) => {
             return {
                 formIsValid: isFormValid,

@@ -31,12 +31,12 @@ export const purchasableBurger = (order, history,token) => {
         orderAxios.post("/orders.json?auth="+token, order)
             .then(response => {
                 dispatch(purchasableBurgerSuccess(response.data.name, order));
-                history.push("/orders");
+                history.push("/");
             })
             .catch(err => {
-                console.log(err);
+               
                 dispatch(purchasableBurgerFail(err));
-                history.push("/orders");
+                history.push("/");
             });
     }
 }

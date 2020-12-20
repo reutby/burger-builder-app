@@ -6,6 +6,7 @@ import Input from "../../components/UI/Input/Input";
 import Button from "../../components/UI/Button/Button";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import classes from "./Auth.module.css";
+import {checkValidity} from "../../shared/utility"
 class Auth extends Component {
 
     state = {
@@ -44,28 +45,6 @@ class Auth extends Component {
         isSignUp: true
     }
 
-    checkValidity = (value, rules) => {
-        if (!rules) {
-            return true;
-        }
-        let isValid = true;
-
-        if (rules.require) {
-            isValid = (value.trim() !== '' && isValid);
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-        return isValid;
-    }
     onSignClickedHandler = () => {
         this.setState(prev => {
             return {
@@ -83,7 +62,7 @@ class Auth extends Component {
                     [name]: {
                         ...prev.controls[name],
                         value: value,
-                        valid: this.checkValidity(value, { ...this.state.controls[name].validation }),
+                        valid: checkValidity(value, { ...this.state.controls[name].validation }),
                         touch: true
                     }
                 }

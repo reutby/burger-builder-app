@@ -1,5 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
-import {updateObject} from "../utility";
+import {updateObject} from "../../shared/utility";
 const initialState ={
     tokenId:null,
     userId:null,
@@ -28,7 +28,7 @@ const authFail =(state,action)=>{
     })
 }
 
-const logout =(state,action)=>{
+const logout =(state)=>{
     return updateObject(state,{
         tokenId:null,
         userId:null
@@ -40,7 +40,7 @@ const reducer = (state=initialState,action)=>{
         case actionTypes.AUTH_START: return authStart(state,action);
         case actionTypes.AUTH_SUCCESS: return authSuccess(state,action);
         case actionTypes.AUTH_FAIL:return authFail(state,action);
-        case actionTypes.AUTH_LOGOUT:return logout(state,action);
+        case actionTypes.AUTH_LOGOUT:return logout(state);
         default:return state;
     }
 
