@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import orderAxios from "../../../axios-orders";
 import classes from "./ContactData.module.css";
@@ -9,67 +9,67 @@ import Input from "../../../components/UI/Input/Input";
 import orderConfig from "./orderConfig/orderConfig";
 import * as ActionsCreators from "../../../store/actions/index";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
-import {checkValidity} from "../../../shared/utility";
-class ContactData extends Component {
+import { checkValidity } from "../../../shared/utility";
 
-    state = {
-        orderForm: orderConfig,
-        formIsValid: false,
-    }
+const ContactData = (props) => {
 
-    
-    orderHandler = (event) => {
+    const [orderForm, setOrderForm] = useState(orderConfig);
+    const [formIsValid, setFormIsValid] = useState(false);
+
+    const orderHandler = (event) => {
         event.preventDefault();
         const costumer = {};
-        for (let inputElement in this.state.orderForm) {
-            costumer[inputElement] = this.state.orderForm[inputElement].value;
+        for (let inputElement in orderForm) {
+            costumer[inputElement] = orderForm[inputElement].value;
         }
-       
-        const { value: deliveryMethodValue } = this.state.orderForm.deliveryMethod;
+
+        const { value: deliveryMethodValue } = orderForm.deliveryMethod;
         const order = {
-            ingredients: this.props.ings,
-            price: this.props.price,
+            ingredients: props.ings,
+            price: props.price,
             customer: costumer,
             deliveryMethod: deliveryMethodValue,
-            userId:this.props.userId
+            userId: props.userId
         };
-        
-        this.props.purchaseBurger(order,this.props.history,this.props.token);
-        
+
+        props.purchaseBurger(order, props.history, props.token);
+
     }
-    onChangeInputHandler = (event) => {
+
+    const onChangeInputHandler = (event) => {
         const { name, value } = event.target;
         const validationRules = {
-            ...this.state.orderForm[name].validation
+            ...orderForm[name].validation
         }
         const isValid = checkValidity(value, validationRules);
 
         let isFormValid = true;
-        for (let inputElement in this.state.orderForm) {
+        for (let inputElement in orderForm) {
 
-            isFormValid = this.state.orderForm[inputElement].valid && isFormValid;
+            isFormValid = orderForm[inputElement].valid && isFormValid;
         }
-        this.setState((prev) => {
+        setOrderForm((prev) => {
             return {
-                formIsValid: isFormValid,
-                orderForm: {
-                    ...prev.orderForm,
-                    [name]: {
-                        ...prev.orderForm[name],
-                        value: value,
-                        valid: isValid,
-                        touch: true
-                    }
+                ...prev,
+                [name]: {
+                    ...prev[name],
+                    value: value,
+                    valid: isValid,
+                    touch: true
                 }
             }
         });
+
+        setFormIsValid(isFormValid);
+
     }
-    createInputElements = () => {
+
+    const createInputElements = () => {
         const inputsConfigArray = [];
         let inputsElements = null;
-        for (let inputName in this.state.orderForm) {
+        for (let inputName in orderForm) {
             let { elementType, elementConfig, value, label, valid, touch } =
-                this.state.orderForm[inputName];
+                orderForm[inputName];
             let configUpdate = {
                 ...elementConfig
             }
@@ -93,7 +93,7 @@ class ContactData extends Component {
                 isTouch={input.touch}
                 invalid={!(input.valid)}
                 key={input.elementConfig.name}
-                onChange={this.onChangeInputHandler}
+                onChange={onChangeInputHandler}
                 elementType={input.elementType}
                 elementConfig={input.elementConfig}
                 value={input.value}
@@ -102,39 +102,39 @@ class ContactData extends Component {
         });
         return inputsElements;
     }
-    render() {
-        const inputsElements = this.createInputElements();
 
-        return (
-            <Aux>
-                {(this.props.loading) ? <Spinner /> :
-                    <div className={classes.ContactData}>
-                        <h4>Please Enter Your Contact Data</h4>
-                        <form>
-                            {inputsElements}
-                            <Button disabled={!this.state.formIsValid} btnType="Success" buttonClicked={this.orderHandler}>ORDER</Button>
-                        </form>
+    const inputsElements = createInputElements();
 
-                    </div>}
-            </Aux>
-        )
-    }
+    return (
+        <Aux>
+            {(props.loading) ? <Spinner /> :
+                <div className={classes.ContactData}>
+                    <h4>Please Enter Your Contact Data</h4>
+                    <form>
+                        {inputsElements}
+                        <Button disabled={!formIsValid} btnType="Success" buttonClicked={orderHandler}>ORDER</Button>
+                    </form>
+
+                </div>}
+        </Aux>
+    )
+
 }
 
 const mapStatesToProps = ((state) => {
     return {
         ings: state.bbr.ingredients,
         price: state.bbr.totalPrice,
-        loading:state.order.loading,
-        token:state.auth.tokenId,
-        userId:state.auth.userId
+        loading: state.order.loading,
+        token: state.auth.tokenId,
+        userId: state.auth.userId
     };
 });
 
 const mapDispatchToProps = ((dispatch) => {
     return {
-        purchaseBurger: (order,history,token)=> dispatch(ActionsCreators.purchasableBurger(order,history,token))
+        purchaseBurger: (order, history, token) => dispatch(ActionsCreators.purchasableBurger(order, history, token))
     };
 });
 
-export default connect(mapStatesToProps,mapDispatchToProps)(withErrorHandler(ContactData,orderAxios));
+export default connect(mapStatesToProps, mapDispatchToProps)(withErrorHandler(ContactData, orderAxios));
